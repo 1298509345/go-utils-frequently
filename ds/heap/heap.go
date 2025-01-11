@@ -1,6 +1,6 @@
 package heap
 
-// New 原生heap实现不限制size，且必须传入一个完整实现 heap.Interface 的实例，使用较繁琐（Less和类型绑定，无法实现带泛型通用方法）
+// New 内建heap实现不限制size，且必须传入一个完整实现 heap.Interface 的实例，使用较繁琐（Less和类型绑定，无法实现带泛型通用方法）
 func New[T any](size int, le func(t1, t2 T) bool) *Heap[T] {
 	return &Heap[T]{
 		Vals: make([]T, 0, size+1),

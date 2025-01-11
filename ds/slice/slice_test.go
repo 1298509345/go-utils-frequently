@@ -31,34 +31,8 @@ func TestRemoveSliceDuplicate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := RemoveDuplicateByID(tt.args.sl, tt.args.identifier); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("RemoveDuplicateByID() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestSliceContains(t *testing.T) {
-	type args[T comparable] struct {
-		s []T
-		e T
-	}
-	type testCase[T comparable] struct {
-		name string
-		args args[T]
-		want bool
-	}
-	tests := []testCase[int]{
-		{
-			name: "test1",
-			args: args[int]{s: []int{1, 2, 3}, e: 1},
-			want: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Contains(tt.args.s, tt.args.e); got != tt.want {
-				t.Errorf("Contains() = %v, want %v", got, tt.want)
+			if got := DeleteDuplicateByID(tt.args.sl, tt.args.identifier); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DeleteDuplicateByID() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -136,32 +110,6 @@ func TestSliceDifferenceSet(t *testing.T) {
 	}
 }
 
-func TestSliceDuplicateN(t *testing.T) {
-	type args[E any] struct {
-		e E
-		n int64
-	}
-	type testCase[E any] struct {
-		name string
-		args args[E]
-		want []E
-	}
-	tests := []testCase[int64]{
-		{
-			name: "test1",
-			args: args[int64]{e: 1, n: 3},
-			want: []int64{1, 1, 1},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := DuplicateN(tt.args.e, tt.args.n); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DuplicateN() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestSliceFindValByFunc(t *testing.T) {
 	type args[T any] struct {
 		sl []T
@@ -185,12 +133,12 @@ func TestSliceFindValByFunc(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := FindValByFunc(tt.args.sl, tt.args.fn)
+			got, got1 := FindByFunc(tt.args.sl, tt.args.fn)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FindValByFunc() got = %v, want %v", got, tt.want)
+				t.Errorf("FindByFunc() got = %v, want %v", got, tt.want)
 			}
 			if got1 != tt.want1 {
-				t.Errorf("FindValByFunc() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("FindByFunc() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -303,8 +251,8 @@ func TestSliceRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Remove(tt.args.sl, tt.args.spec); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Remove() = %v, want %v", got, tt.want)
+			if got := Delete(tt.args.sl, tt.args.spec); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Delete() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -322,36 +270,8 @@ func TestSliceRemove(t *testing.T) {
 
 	for _, tt := range tests2 {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Remove(tt.args.sl, tt.args.spec); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Remove() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestSliceRemoveByFunc(t *testing.T) {
-	type args[T any] struct {
-		sl     []T
-		remove func(T) bool
-	}
-	type testCase[T any] struct {
-		name string
-		args args[T]
-		want []T
-	}
-	tests := []testCase[string]{
-		{
-			name: "test1",
-			args: args[string]{sl: []string{"a", "b", "c"}, remove: func(s string) bool {
-				return s == "a"
-			}},
-			want: []string{"b", "c"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := RemoveByFunc(tt.args.sl, tt.args.remove); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("RemoveByFunc() = %v, want %v", got, tt.want)
+			if got := Delete(tt.args.sl, tt.args.spec); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Delete() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -427,69 +347,6 @@ func JsonString(v any) string {
 	return string(b)
 }
 
-func TestSliceContainsByFunc(t *testing.T) {
-	type args[T any] struct {
-		s            []T
-		containsFunc func(T) bool
-	}
-	type testCase[T any] struct {
-		name string
-		args args[T]
-		want bool
-	}
-	tests := []testCase[book]{
-		{
-			name: "test1",
-			args: args[book]{
-				s: []book{
-					{ID: 1, Serials: "se1", Publisher: "a"},
-					{ID: 2, Serials: "se2", Publisher: "a"},
-				},
-				containsFunc: func(b book) bool {
-					return b.ID == 1 && b.Serials == "se1" && b.Publisher == "a"
-				}},
-			want: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ContainsByFunc(tt.args.s, tt.args.containsFunc); got != tt.want {
-				t.Errorf("ContainsByFunc() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestSliceMerge(t *testing.T) {
-	type args[T any] struct {
-		sls [][]T
-	}
-	type testCase[T any] struct {
-		name string
-		args args[T]
-		want []T
-	}
-	tests := []testCase[string]{
-		{
-			name: "test1",
-			args: args[string]{sls: [][]string{{"a", "b"}, {"c", "d"}}},
-			want: []string{"a", "b", "c", "d"},
-		},
-		{
-			name: "test2",
-			args: args[string]{sls: [][]string{{"a", "b"}, {"c", "d"}, {"e", "f"}}},
-			want: []string{"a", "b", "c", "d", "e", "f"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Merge(tt.args.sls...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Merge() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestSliceFilter(t *testing.T) {
 	type args[T any] struct {
 		slice  []T
@@ -563,33 +420,9 @@ func TestSliceRemoveDuplicateByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := RemoveDuplicate(tt.args.sl); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("RemoveDuplicate() = %v, want %v", got, tt.want)
+			if got := DeleteDuplicate(tt.args.sl); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DeleteDuplicate() = %v, want %v", got, tt.want)
 			}
-		})
-	}
-}
-
-func TestSliceForEach(t *testing.T) {
-	type args[T any] struct {
-		slice   []T
-		forEach func(T)
-	}
-	type testCase[T any] struct {
-		name string
-		args args[T]
-	}
-	tests := []testCase[string]{
-		{
-			name: "test1",
-			args: args[string]{slice: []string{"a", "b", "c"}, forEach: func(s string) {
-				t.Log(s)
-			}},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ForEach(tt.args.slice, tt.args.forEach)
 		})
 	}
 }
@@ -739,7 +572,7 @@ func TestSliceMax(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotMax := Max(tt.args.sl, tt.args.less); !reflect.DeepEqual(gotMax, tt.wantMax) {
+			if gotMax := Max(tt.args.less, tt.args.sl...); !reflect.DeepEqual(gotMax, tt.wantMax) {
 				t.Errorf("Max() = %v, want %v", gotMax, tt.wantMax)
 			}
 		})
@@ -774,8 +607,138 @@ func TestSliceMin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotMin := Min(tt.args.sl, tt.args.less); !reflect.DeepEqual(gotMin, tt.wantMin) {
+			if gotMin := Min(tt.args.less, tt.args.sl...); !reflect.DeepEqual(gotMin, tt.wantMin) {
 				t.Errorf("Min() = %v, want %v", gotMin, tt.wantMin)
+			}
+		})
+	}
+}
+
+func TestRemoveByID(t *testing.T) {
+	type args[E any, ID comparable] struct {
+		sl         []E
+		spec       E
+		identifier Identifier[E, ID]
+	}
+	type testCase[E any, ID comparable] struct {
+		name string
+		args args[E, ID]
+		want []E
+	}
+	tests := []testCase[book, int64]{
+		{
+			name: "test1",
+			args: args[book, int64]{
+				sl: []book{
+					{ID: 1, Serials: "se1", Publisher: "a"},
+					{ID: 2, Serials: "se1", Publisher: "a"},
+				},
+				spec:       book{ID: 1, Serials: "se1", Publisher: "a"},
+				identifier: func(b book) int64 { return b.ID },
+			},
+			want: []book{{ID: 2, Serials: "se1", Publisher: "a"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DeleteByID(tt.args.sl, tt.args.spec, tt.args.identifier); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DeleteByID() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGroup(t *testing.T) {
+	type args[E comparable] struct {
+		sl []E
+	}
+	type testCase[E comparable] struct {
+		name string
+		args args[E]
+		want map[E][]E
+	}
+	tests := []testCase[string]{
+		{
+			name: "test1",
+			args: args[string]{sl: []string{"a", "b", "a"}},
+			want: map[string][]string{"a": {"a", "a"}, "b": {"b"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Group(tt.args.sl); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Group() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFindByID(t *testing.T) {
+	type args[E any, ID comparable] struct {
+		sl         []E
+		id         ID
+		identifier Identifier[E, ID]
+	}
+	type testCase[E any, ID comparable] struct {
+		name  string
+		args  args[E, ID]
+		want  E
+		want1 bool
+	}
+	tests := []testCase[book, int64]{
+		{
+			name: "test1",
+			args: args[book, int64]{
+				sl: []book{
+					{ID: 1, Serials: "se1", Publisher: "a"},
+					{ID: 2, Serials: "se1", Publisher: "a"},
+				},
+				id:         1,
+				identifier: func(b book) int64 { return b.ID },
+			},
+			want: book{ID: 1, Serials: "se1", Publisher: "a"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := FindByID(tt.args.sl, tt.args.id, tt.args.identifier)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FindByID() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("FindByID() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func TestFind(t *testing.T) {
+	type args[T comparable] struct {
+		sl []T
+		e  T
+	}
+	type testCase[T comparable] struct {
+		name  string
+		args  args[T]
+		want  T
+		want1 bool
+	}
+	tests := []testCase[int]{
+		{
+			name:  "test1",
+			args:  args[int]{sl: []int{1, 2, 3}, e: 1},
+			want:  1,
+			want1: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := Find(tt.args.sl, tt.args.e)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Find() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("Find() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
