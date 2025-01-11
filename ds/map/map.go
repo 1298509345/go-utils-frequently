@@ -8,7 +8,6 @@ import (
 // 内建方法 maps.Copy, maps.Clone ...
 
 func MapKeys[K comparable, V any](m map[K]V) (ret []K) {
-	maps.Keys(m)
 	for k := range m {
 		ret = append(ret, k)
 	}
