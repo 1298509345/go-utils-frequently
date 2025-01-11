@@ -5,36 +5,6 @@ import (
 	"testing"
 )
 
-//func TestMapCopy(t *testing.T) {
-//	type args[K comparable, V any] struct {
-//		src map[K]V
-//	}
-//	type testCase[K comparable, V any] struct {
-//		name    string
-//		args    args[K, V]
-//		wantDst map[K]V
-//	}
-//	tests := []testCase[string, string]{
-//		{
-//			name:    "test1",
-//			args:    args[string, string]{src: map[string]string{"a": "b"}},
-//			wantDst: map[string]string{"a": "b"},
-//		},
-//		{
-//			name:    "test2",
-//			args:    args[string, string]{src: map[string]string{"a": "b", "c": "d"}},
-//			wantDst: map[string]string{"a": "b", "c": "d"},
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if gotDst := MapCopy(tt.args.src); !reflect.DeepEqual(gotDst, tt.wantDst) {
-//				t.Errorf("MapCopy() = %v, want %v", gotDst, tt.wantDst)
-//			}
-//		})
-//	}
-//}
-
 func TestMapKeys(t *testing.T) {
 	type args[K comparable, V any] struct {
 		m map[K]V
