@@ -59,11 +59,6 @@ func MapIsEmpty[K comparable, V any](m map[K]V) bool {
 }
 
 func MapDelete[K comparable, V any](m map[K]V, ks ...K) map[K]V {
-	MapDeleteByFunc(m, func(k K, _ V) bool { return slices.Contains(ks, k) })
-	return m
-}
-
-func MapDeleteByFunc[K comparable, V any](m map[K]V, f func(K, V) bool) map[K]V {
-	maps.DeleteFunc(m, f)
+	maps.DeleteFunc(m, func(k K, _ V) bool { return slices.Contains(ks, k) })
 	return m
 }
