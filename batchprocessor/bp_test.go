@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/1298509345/go-utils-frequently/optional"
 	"math/rand/v2"
 	"reflect"
 	"strconv"
@@ -501,4 +502,38 @@ func TestCopy(t *testing.T) {
 	b.err = nil
 
 	t.Log(a[0])
+}
+
+func TestNew(t *testing.T) {
+	type args[T any] struct {
+		options []optional.Op[BatchProcessor[T]]
+	}
+	type testCase[T any] struct {
+		name string
+		args args[T]
+		want *BatchProcessor[T]
+	}
+
+	tests := []testCase[int]{
+		{
+			name: "1",
+			args: args[int]{
+				options: []optional.Op[BatchProcessor[int]]{
+					WithBatchSize[int](11),
+					WithConcurrencyLimit[int](9),
+				},
+			},
+			want: &BatchProcessor[int]{
+				BatchSize:        11,
+				ConcurrencyLimit: 9,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := New(tt.args.options...); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("New() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

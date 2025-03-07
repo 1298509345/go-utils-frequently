@@ -3,6 +3,7 @@ package batchprocessor
 import (
 	"context"
 	"fmt"
+	"github.com/1298509345/go-utils-frequently/optional"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -21,10 +22,9 @@ type (
 		BatchSize        int
 		ConcurrencyLimit int
 	}
-	Option[T any] func(*BatchProcessor[T])
 )
 
-func New[T any](options ...Option[T]) *BatchProcessor[T] {
+func New[T any](options ...optional.Op[BatchProcessor[T]]) *BatchProcessor[T] {
 	bp := &BatchProcessor[T]{}
 	for _, option := range options {
 		option(bp)
@@ -34,19 +34,19 @@ func New[T any](options ...Option[T]) *BatchProcessor[T] {
 	return bp
 }
 
-func WithBatchSize[T any](batchSize int) Option[T] {
+func WithBatchSize[T any](batchSize int) optional.Op[BatchProcessor[T]] {
 	return func(bp *BatchProcessor[T]) {
 		bp.BatchSize = batchSize
 	}
 }
 
-func WithProcessor[T any](proc Processor[T]) Option[T] {
+func WithProcessor[T any](proc Processor[T]) optional.Op[BatchProcessor[T]] {
 	return func(bp *BatchProcessor[T]) {
 		bp.ProcFunc = proc
 	}
 }
 
-func WithConcurrencyLimit[T any](limit int) Option[T] {
+func WithConcurrencyLimit[T any](limit int) optional.Op[BatchProcessor[T]] {
 	return func(bp *BatchProcessor[T]) {
 		bp.ConcurrencyLimit = limit
 	}
