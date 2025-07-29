@@ -461,6 +461,39 @@ func TestSlice2Map(t *testing.T) {
 			}
 		})
 	}
+
+	type Val struct {
+		ID int64
+		V  string
+	}
+
+	tests2 := []testCase[*Val, int64]{
+		{
+			name: "tests2",
+			args: args[*Val, int64]{
+				sl: []*Val{
+					{ID: 1, V: "1"},
+					{ID: 2, V: "2"},
+					{ID: 3, V: "3"},
+				},
+				id: func(i *Val) int64 {
+					return i.ID
+				},
+			},
+			want: map[int64]*Val{
+				1: {ID: 1, V: "1"},
+				2: {ID: 2, V: "2"},
+				3: {ID: 3, V: "3"},
+			},
+		},
+	}
+	for _, tt := range tests2 {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ToMap(tt.args.sl, tt.args.id); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToMap tests2() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
 
 func TestSliceGroupByFunc1(t *testing.T) {

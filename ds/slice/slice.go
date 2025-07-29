@@ -169,3 +169,16 @@ func Min[E any](less Less[E], sl ...E) (min E) {
 func IsEmpty[T any](sl []T) bool {
 	return len(sl) == 0
 }
+
+func Merge[T any](sls ...[]T) []T {
+	var sumLen int
+	for _, sl := range sls {
+		sumLen += len(sl)
+	}
+
+	var ret = make([]T, 0, sumLen)
+	for _, sl := range sls {
+		ret = append(ret, sl...)
+	}
+	return ret
+}

@@ -28,8 +28,8 @@ func TestMapKeys(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotRet := MapKeys(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
-				t.Errorf("MapKeys() = %v, want %v", gotRet, tt.wantRet)
+			if gotRet := Keys(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
+				t.Errorf("Keys() = %v, want %v", gotRet, tt.wantRet)
 			}
 		})
 	}
@@ -59,8 +59,29 @@ func TestMapMerge(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapMerge(tt.args.a, tt.args.b); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapMerge() = %v, want %v", got, tt.want)
+			if got := Merge(tt.args.a, tt.args.b); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Merge() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+
+	type V struct {
+		A int
+		B string
+	}
+
+	tests2 := []testCase[int, *V]{
+		{
+			name: "test3",
+			args: args[int, *V]{a: map[int]*V{1: {A: 1, B: "2"}}, b: map[int]*V{3: {A: 3, B: "4"}}},
+			want: map[int]*V{1: {A: 1, B: "2"}, 3: {A: 3, B: "4"}},
+		},
+	}
+	for _, tt := range tests2 {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Merge(tt.args.a, tt.args.b)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -84,8 +105,8 @@ func TestMapOneKey(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotRet := MapOneKey(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
-				t.Errorf("MapOneKey() = %v, want %v", gotRet, tt.wantRet)
+			if gotRet := OneKey(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
+				t.Errorf("OneKey() = %v, want %v", gotRet, tt.wantRet)
 			}
 		})
 	}
@@ -109,7 +130,7 @@ func TestMapOneVal(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotRet := MapOneVal(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
+			if gotRet := OneVal(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
 				t.Errorf("MapOneVal() = %v, want %v", gotRet, tt.wantRet)
 			}
 		})
@@ -139,8 +160,8 @@ func TestMapVals(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotRet := MapVals(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
-				t.Errorf("MapVals() = %v, want %v", gotRet, tt.wantRet)
+			if gotRet := Vals(tt.args.m); !reflect.DeepEqual(gotRet, tt.wantRet) {
+				t.Errorf("Vals() = %v, want %v", gotRet, tt.wantRet)
 			}
 		})
 	}
@@ -179,8 +200,8 @@ func TestMapMergeByFunc(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapMergeByFunc(tt.args.a, tt.args.b, tt.args.merge); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapMergeByFunc() = %v, want %v", got, tt.want)
+			if got := MergeByFunc(tt.args.a, tt.args.b, tt.args.merge); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MergeByFunc() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -214,8 +235,8 @@ func TestMapIsEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapIsEmpty(tt.args.m); got != tt.want {
-				t.Errorf("MapIsEmpty() = %v, want %v", got, tt.want)
+			if got := IsEmpty(tt.args.m); got != tt.want {
+				t.Errorf("IsEmpty() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -259,8 +280,8 @@ func TestMapRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapDelete(tt.args.m, tt.args.k...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MapDelete() = %v, want %v", got, tt.want)
+			if got := Delete(tt.args.m, tt.args.k...); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Delete() = %v, want %v", got, tt.want)
 			}
 		})
 	}
