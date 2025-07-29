@@ -14,14 +14,14 @@ func TestHeap_Add(t *testing.T) {
 	})
 
 	// 添加元素
-	mh.Add(5)
-	mh.Add(3)
-	mh.Add(7)
-	mh.Add(1)
-	mh.Add(9)
-	t.Log(mh.Vals)
-	mh.Add(10)
-	t.Log(mh.Vals)
+	mh.Push(5)
+	mh.Push(3)
+	mh.Push(7)
+	mh.Push(1)
+	mh.Push(9)
+	t.Log(mh.innerHeap.vals)
+	mh.Push(10)
+	t.Log(mh.innerHeap.vals)
 }
 
 func TestHeap(t *testing.T) {
@@ -42,9 +42,9 @@ func TestHeap(t *testing.T) {
 	})
 
 	for _, v := range randInput {
-		h1.Add(v)
+		h1.Push(v)
 	}
-	t.Log(h1.Vals)
+	t.Log(h1.innerHeap.vals)
 	sort.IntSlice(randInput).Sort()
 	t.Log(randInput)
 
@@ -53,10 +53,22 @@ func TestHeap(t *testing.T) {
 	})
 
 	for _, v := range randInput2 {
-		h2.Add(v)
+		h2.Push(v)
 	}
-	t.Log(h2.Vals)
+	t.Log(h2.innerHeap.vals)
 
 	sort.IntSlice(randInput2).Sort()
 	t.Log(randInput2)
+}
+
+func findKthLargest(nums []int, k int) int {
+	newh := New(k, func(t1, t2 int) bool {
+		return t1 <= t2
+	})
+
+	for _, v := range nums {
+		newh.Push(v)
+	}
+	pop, _ := newh.Pop()
+	return pop
 }
